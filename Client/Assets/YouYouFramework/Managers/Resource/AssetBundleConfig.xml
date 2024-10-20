@@ -2,34 +2,34 @@
 <Root>
   <AssetBundle>
 
-    <Item Name = "声音" Tag = "Audio" IsFolder = "True" IsFirstData = "False">
+    <Item Name = "声音" Tag = "Audio" Overall= "False" IsFirstData = "False" IsEncrypt = "False">
       <Path Value = "Download/Audio" />
     </Item>
 
-    <Item Name = "CusShader" Tag = "Shader" IsFolder = "False" IsFirstData = "True">
+    <Item Name = "CusShader" Tag = "Shader" Overall= "True" IsFirstData = "True" IsEncrypt = "True">
       <Path Value = "Download/CusShaders" />
     </Item>
 
-    <Item Name = "DataTable" Tag = "DataTable" IsFolder = "False" IsFirstData = "False">
+    <Item Name = "DataTable" Tag = "DataTable" Overall= "True" IsFirstData = "True" IsEncrypt = "True">
       <Path Value = "Download/DataTable" />
     </Item>
 
-    <Item Name = "xLuaLogic" Tag = "Lua" IsFolder = "False" IsFirstData = "True">
+    <Item Name = "xLuaLogic" Tag = "Lua" Overall= "True" IsFirstData = "True" IsEncrypt = "True">
       <Path Value = "Download/xLuaLogic" />
     </Item>
 
-    <Item Name = "Role" Tag = "Role" IsFolder = "True" IsFirstData = "False">
+    <Item Name = "Role" Tag = "Role" Overall= "False" IsFirstData = "False" IsEncrypt = "False">
       <Path Value = "Download/Role" />
     </Item>
 
-    <Item Name = "Effect" Tag = "Effect" IsFolder = "True" IsFirstData = "True">
+    <Item Name = "Effect" Tag = "Effect" Overall= "False" IsFirstData = "True" IsEncrypt = "False">
       <Path Value = "Download/Effect" />
     </Item>
     
-    <Item Name = "初始场景" Tag = "Scene" IsFolder = "False" IsFirstData = "True">
+    <Item Name = "初始场景" Tag = "Scene" Overall= "True" IsFirstData = "True" IsEncrypt = "False">
       <Path Value = "Download/Scene/Scene_SelectRole.unity" />
     </Item>
-    <Item Name = "其它场景" Tag = "Scene" IsFolder = "False" IsFirstData = "False">
+    <Item Name = "其它场景" Tag = "Scene" Overall= "True" IsFirstData = "False" IsEncrypt = "False">
       <Path Value = "Download/Scene/GameScene_ChangAn.unity" />
       <Path Value = "Download/Scene/GameScene_DiGong1.unity" />
       <Path Value = "Download/Scene/GameScene_DiGong2.unity" />
@@ -46,18 +46,18 @@
       <Path Value = "Download/Scene/GameScene_XueDi2.unity" />
     </Item>
 
-    <Item Name = "UI预设" Tag = "UI" IsFolder = "False" IsFirstData = "True">
+    <Item Name = "UI预设" Tag = "UI" Overall= "True" IsFirstData = "True" IsEncrypt = "False">
       <Path Value = "Download/UI/UIPrefab" />
     </Item>
-    <Item Name = "UI字体" Tag = "UIFont" IsFolder = "False" IsFirstData = "True">
+    <Item Name = "UI字体" Tag = "UIFont" Overall= "True" IsFirstData = "True" IsEncrypt = "False">
       <Path Value = "Download/UI/UIFont" />
     </Item>
-    <Item Name = "UI图集" Tag = "UI" IsFolder = "False" IsFirstData = "True">
+    <Item Name = "UI图集" Tag = "UI" Overall= "True" IsFirstData = "True" IsEncrypt = "False">
       <Path Value = "Download/UI/UIRes/UICommon" />
       <Path Value = "Download/UI/UIRes/UIFrame" />
       <Path Value = "Download/UI/UIRes/UITitleBar" />
     </Item>
-    <Item Name = "UILoading" Tag = "UI" IsFolder = "True" IsFirstData = "False">
+    <Item Name = "UILoading" Tag = "UI" Overall= "False" IsFirstData = "False" IsEncrypt = "False">
       <Path Value = "Download/UI/UIRes/Loading" />
     </Item>
 
