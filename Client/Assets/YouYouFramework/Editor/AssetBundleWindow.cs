@@ -49,7 +49,10 @@ public class AssetBundleWindow : EditorWindow
     private Vector2 mScrollPos;
 
     public AssetBundleWindow() {
-        string xmlPath = Application.dataPath + "/YouYouFramework/Managers/Resource/AssetBundleConfig.xml";
+        
+    }
+    private void OnEnable() {
+        string xmlPath = Application.dataPath + "/YouYouFramework/Editor/AssetBundle/AssetBundleConfig.xml";
         mAssetBundleDAL = new AssetBundleDAL(xmlPath);
         mXmlDataList = mAssetBundleDAL.GetList();
 

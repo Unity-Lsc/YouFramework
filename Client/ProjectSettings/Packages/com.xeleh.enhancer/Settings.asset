@@ -15,7 +15,7 @@ MonoBehaviour:
   theme:
     foldout: 1
     darkEnabled: 1
-    autoEnable: 0
+    autoEnable: 1
   sidebar:
     foldout: 1
     enabled: 0

@@ -17,7 +17,7 @@ public class AssetBundleExample : MonoBehaviour
 
     void Start()
     {
-        mLocalFilePath = @"G:\UnityProject\YouYouFramework\Client\AssetBundles\Windows\";
+        mLocalFilePath = @"G:\UnityProject\YouFramework\Client\AssetBundles\Windows\";
 
         AssetBundleLoadUIRes("download/ui/uires/uicommon.assetbundle");
         //AssetBundleLoadUIRes("download/ui/uires/uiframe.assetbundle");
