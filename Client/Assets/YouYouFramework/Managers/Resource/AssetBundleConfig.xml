@@ -1,65 +1,56 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Root>
-  <AssetBundle>
-
-    <Item Name = "声音" Tag = "Audio" Overall= "False" IsFirstData = "False" IsEncrypt = "False">
-      <Path Value = "Download/Audio" />
+  <AssetBundle ResourceVersion="1.0.8">
+    <Item Name="声音" Tag="Audio" Overall="False" IsFirstData="False" IsEncrypt="False">
+      <Path Value="Download/Audio" />
     </Item>
-
-    <Item Name = "CusShader" Tag = "Shader" Overall= "True" IsFirstData = "True" IsEncrypt = "True">
-      <Path Value = "Download/CusShaders" />
+    <Item Name="CusShader" Tag="Shader" Overall="True" IsFirstData="True" IsEncrypt="True">
+      <Path Value="Download/CusShaders" />
     </Item>
-
-    <Item Name = "DataTable" Tag = "DataTable" Overall= "True" IsFirstData = "True" IsEncrypt = "True">
-      <Path Value = "Download/DataTable" />
+    <Item Name="DataTable" Tag="DataTable" Overall="True" IsFirstData="True" IsEncrypt="True">
+      <Path Value="Download/DataTable" />
     </Item>
-
-    <Item Name = "xLuaLogic" Tag = "Lua" Overall= "True" IsFirstData = "True" IsEncrypt = "True">
-      <Path Value = "Download/xLuaLogic" />
+    <Item Name="xLuaLogic" Tag="Lua" Overall="True" IsFirstData="True" IsEncrypt="True">
+      <Path Value="Download/xLuaLogic" />
     </Item>
-
-    <Item Name = "Role" Tag = "Role" Overall= "False" IsFirstData = "False" IsEncrypt = "False">
-      <Path Value = "Download/Role" />
+    <Item Name="Role" Tag="Role" Overall="False" IsFirstData="False" IsEncrypt="False">
+      <Path Value="Download/Role" />
     </Item>
-
-    <Item Name = "Effect" Tag = "Effect" Overall= "False" IsFirstData = "True" IsEncrypt = "False">
-      <Path Value = "Download/Effect" />
+    <Item Name="Effect" Tag="Effect" Overall="False" IsFirstData="True" IsEncrypt="False">
+      <Path Value="Download/Effect" />
     </Item>
-    
-    <Item Name = "初始场景" Tag = "Scene" Overall= "True" IsFirstData = "True" IsEncrypt = "False">
-      <Path Value = "Download/Scene/Scene_SelectRole.unity" />
+    <Item Name="初始场景" Tag="Scene" Overall="True" IsFirstData="True" IsEncrypt="False">
+      <Path Value="Download/Scene/Scene_SelectRole.unity" />
     </Item>
-    <Item Name = "其它场景" Tag = "Scene" Overall= "True" IsFirstData = "False" IsEncrypt = "False">
-      <Path Value = "Download/Scene/GameScene_ChangAn.unity" />
-      <Path Value = "Download/Scene/GameScene_DiGong1.unity" />
-      <Path Value = "Download/Scene/GameScene_DiGong2.unity" />
-      <Path Value = "Download/Scene/GameScene_HangZhou.unity" />
-      <Path Value = "Download/Scene/GameScene_PingYuan1.unity" />
-      <Path Value = "Download/Scene/GameScene_RongYan1.unity" />
-      <Path Value = "Download/Scene/GameScene_RongYan2.unity" />
-      <Path Value = "Download/Scene/GameScene_RongYan3.unity" />
-      <Path Value = "Download/Scene/GameScene_ShaMo1.unity" />
-      <Path Value = "Download/Scene/GameScene_ShanGu.unity" />
-      <Path Value = "Download/Scene/GameScene_ShanGu2.unity" />
-      <Path Value = "Download/Scene/GameScene_ShanGu3.unity" />
-      <Path Value = "Download/Scene/GameScene_XueDi1.unity" />
-      <Path Value = "Download/Scene/GameScene_XueDi2.unity" />
+    <Item Name="其它场景" Tag="Scene" Overall="True" IsFirstData="False" IsEncrypt="False">
+      <Path Value="Download/Scene/GameScene_ChangAn.unity" />
+      <Path Value="Download/Scene/GameScene_DiGong1.unity" />
+      <Path Value="Download/Scene/GameScene_DiGong2.unity" />
+      <Path Value="Download/Scene/GameScene_HangZhou.unity" />
+      <Path Value="Download/Scene/GameScene_PingYuan1.unity" />
+      <Path Value="Download/Scene/GameScene_RongYan1.unity" />
+      <Path Value="Download/Scene/GameScene_RongYan2.unity" />
+      <Path Value="Download/Scene/GameScene_RongYan3.unity" />
+      <Path Value="Download/Scene/GameScene_ShaMo1.unity" />
+      <Path Value="Download/Scene/GameScene_ShanGu.unity" />
+      <Path Value="Download/Scene/GameScene_ShanGu2.unity" />
+      <Path Value="Download/Scene/GameScene_ShanGu3.unity" />
+      <Path Value="Download/Scene/GameScene_XueDi1.unity" />
+      <Path Value="Download/Scene/GameScene_XueDi2.unity" />
     </Item>
-
-    <Item Name = "UI预设" Tag = "UI" Overall= "True" IsFirstData = "True" IsEncrypt = "False">
-      <Path Value = "Download/UI/UIPrefab" />
+    <Item Name="UI预设" Tag="UI" Overall="True" IsFirstData="True" IsEncrypt="False">
+      <Path Value="Download/UI/UIPrefab" />
     </Item>
-    <Item Name = "UI字体" Tag = "UIFont" Overall= "True" IsFirstData = "True" IsEncrypt = "False">
-      <Path Value = "Download/UI/UIFont" />
+    <Item Name="UI字体" Tag="UIFont" Overall="True" IsFirstData="True" IsEncrypt="False">
+      <Path Value="Download/UI/UIFont" />
     </Item>
-    <Item Name = "UI图集" Tag = "UI" Overall= "True" IsFirstData = "True" IsEncrypt = "False">
-      <Path Value = "Download/UI/UIRes/UICommon" />
-      <Path Value = "Download/UI/UIRes/UIFrame" />
-      <Path Value = "Download/UI/UIRes/UITitleBar" />
+    <Item Name="UI图集" Tag="UI" Overall="True" IsFirstData="True" IsEncrypt="False">
+      <Path Value="Download/UI/UIRes/UICommon" />
+      <Path Value="Download/UI/UIRes/UIFrame" />
+      <Path Value="Download/UI/UIRes/UITitleBar" />
     </Item>
-    <Item Name = "UILoading" Tag = "UI" Overall= "False" IsFirstData = "False" IsEncrypt = "False">
-      <Path Value = "Download/UI/UIRes/Loading" />
+    <Item Name="UILoading" Tag="UI" Overall="False" IsFirstData="False" IsEncrypt="False">
+      <Path Value="Download/UI/UIRes/Loading" />
     </Item>
-
   </AssetBundle>
 </Root>

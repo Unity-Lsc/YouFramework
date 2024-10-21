@@ -98,14 +98,23 @@ public class AssetBundleWindow : EditorWindow
             EditorApplication.delayCall = OnCreateVersionFileCallback;
         }
 
+        //让横向box条可以显示到屏幕最右边
+        EditorGUILayout.Space();
+        GUILayout.EndHorizontal();
+
+        GUILayout.BeginHorizontal("box");
+
         if (GUILayout.Button("生成依赖文件", GUILayout.Width(200))) {
             EditorApplication.delayCall = CreateDependenciesFile;
         }
 
-        //让横向box条可以显示到屏幕最右边
-        EditorGUILayout.Space();
+        if (GUILayout.Button("升级资源版本号(" + mAssetBundleDAL.GetVersion() + ")", GUILayout.Width(200))) {
+            EditorApplication.delayCall = OnUpdateVersionCallback;
+        }
 
+        EditorGUILayout.Space();
         GUILayout.EndHorizontal();
+
         #endregion
 
         #region 资源包标题行
@@ -201,11 +210,7 @@ public class AssetBundleWindow : EditorWindow
         mNeedBuildList.Clear();
 
         //需要打包的对象
-        List<AssetBundleEntity> buildList = new List<AssetBundleEntity>();
-        foreach (var entity in mXmlDataList) {
-            if (mSelectDict[entity.Key])
-                buildList.Add(entity);
-        }
+        List<AssetBundleEntity> buildList = GetNeedBuildList();
 
         int len = buildList.Count;
 
@@ -230,6 +235,16 @@ public class AssetBundleWindow : EditorWindow
 
         BuildPipeline.BuildAssetBundles(toPath, mNeedBuildList.ToArray(), BuildAssetBundleOptions.None, mCurBuildTarget);
         Debug.Log("打包完毕");
+
+        AssetBundleEncrypt();
+        Debug.Log("资源包加密完毕");
+
+        CreateDependenciesFile();
+        Debug.Log("生成资源依赖文件 AssetInfo.bytes 完毕");
+
+        OnCreateVersionFileCallback();
+        Debug.Log("创建版本文件成功");
+
     }
 
     /// <summary>
@@ -286,11 +301,7 @@ public class AssetBundleWindow : EditorWindow
         List<AssetEntity> tempList = new List<AssetEntity>();
 
         //需要打包的对象
-        List<AssetBundleEntity> buildList = new List<AssetBundleEntity>();
-        foreach (var entity in mXmlDataList) {
-            if (mSelectDict[entity.Key])
-                buildList.Add(entity);
-        }
+        List<AssetBundleEntity> buildList = GetNeedBuildList();
 
         int len = buildList.Count;
         for (int i = 0; i < len; i++) {
@@ -339,7 +350,7 @@ public class AssetBundleWindow : EditorWindow
         }
         string strJsonFilePath = targetPath + "/AssetInfo.json"; //Json文件路径
         IOUtil.CreateTextFile(strJsonFilePath, LitJson.JsonMapper.ToJson(assetList));
-        Debug.Log("生成 AssetInfo.json 完毕");
+        Debug.Log("生成资源依赖文件 AssetInfo.json 完毕");
 
         MMO_MemoryStream ms = new MMO_MemoryStream();
         //生成二进制文件
@@ -373,7 +384,6 @@ public class AssetBundleWindow : EditorWindow
         fs.Write(buffer, 0, buffer.Length);
         fs.Close();
         fs.Dispose();
-        Debug.Log("生成 AssetInfo.bytes 完毕");
     }
 
     /// <summary>
@@ -474,6 +484,68 @@ public class AssetBundleWindow : EditorWindow
     }
 
     /// <summary>
+    /// 资源包加密
+    /// </summary>
+    private void AssetBundleEncrypt() {
+        //需要打包的对象
+        List<AssetBundleEntity> buildList = GetNeedBuildList();
+        int len = buildList.Count;
+        for (int i = 0; i < len; i++) {
+            var entity = buildList[i];
+            if (entity.IsEncrypt) {
+                string[] folders = new string[entity.PathList.Count];
+                for (int j = 0; j < entity.PathList.Count; j++) {
+                    string path = GetToPath() + "/" + entity.PathList[j];
+                    if (entity.Overall) {
+                        string str = entity.Tag == "Scene" ? ".unity3d" : ".assetbundle";
+                        path = path + str;
+                        EncryptFile(path);
+                    } else {
+                        EncryptFolder(path);
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// 加密文件夹
+    /// </summary>
+    /// <param name="folderPath">要加密的文件夹</param>
+    private void EncryptFolder(string folderPath) {
+        DirectoryInfo info = new DirectoryInfo(folderPath);
+        FileInfo[] fileInfos = info.GetFiles("*", SearchOption.AllDirectories);
+        foreach (var file in fileInfos) {
+            EncryptFile(file.FullName);
+        }
+    }
+
+    /// <summary>
+    /// 加密文件
+    /// </summary>
+    /// <param name="filePath">要加密文件的路径</param>
+    private void EncryptFile(string filePath) {
+        FileInfo fileInfo = new FileInfo(filePath);
+        if(!fileInfo.Extension.Equals(".assetbundle", StringComparison.CurrentCultureIgnoreCase) && !fileInfo.Extension.Equals(".unity3d", StringComparison.CurrentCultureIgnoreCase)) {
+            return;
+        }
+
+        byte[] buffer = null;
+        using (FileStream fs = new FileStream(filePath, FileMode.Open)) {
+            buffer = new byte[fs.Length];
+            fs.Read(buffer, 0, buffer.Length);
+        }
+
+        buffer = SecurityUtil.Xor(buffer);
+
+        using (FileStream fs = new FileStream(filePath, FileMode.Create)) {
+            fs.Write(buffer, 0, buffer.Length);
+            fs.Flush();
+        }
+
+    }
+
+    /// <summary>
     /// 清空AssetBundle回调
     /// </summary>
     private void OnClearAssetBundleCallback() {
@@ -509,7 +581,7 @@ public class AssetBundleWindow : EditorWindow
         if (!Directory.Exists(path)) {
             Directory.CreateDirectory(path);
         }
-        string verPath = path + "/VersionFile.txt";//版本文件路径
+        string verPath = path + "/VersionFile.txt";//版本文件路径(txt)
         //如果版本文件存在 先进行删除
         IOUtil.DeleteFile(verPath);
 
@@ -519,8 +591,12 @@ public class AssetBundleWindow : EditorWindow
 
         //拿到路径下的所有文件
         FileInfo[] files = dir.GetFiles("*", SearchOption.AllDirectories);
+        sbr.AppendLine(mAssetBundleDAL.GetVersion());
         for (int i = 0; i < files.Length; i++) {
             var file = files[i];
+            if(file.Extension == ".manifest") {
+                continue;
+            }
             string fullName = file.FullName;//全名 包含扩展名
             //相对路径
             string name = fullName.Substring(fullName.IndexOf(mBuildTargets[mCurTagetIndex]) + mBuildTargets[mCurTagetIndex].Length + 1);
@@ -532,6 +608,7 @@ public class AssetBundleWindow : EditorWindow
             string size = Math.Ceiling(file.Length / 1024f).ToString();
 
             bool isFirstData = false;//是否是初始数据
+            bool isEncrypt = false;//文件是否加密
             bool isBreak = false;
 
             for (int j = 0; j < mXmlDataList.Count; j++) {
@@ -540,8 +617,10 @@ public class AssetBundleWindow : EditorWindow
                     if(xmlPath.IndexOf(".") != -1) {
                         tempPath = xmlPath.Substring(0, xmlPath.IndexOf("."));
                     }
+                    name = name.Replace("\\", "/").Replace(".assetbundle", "").Replace(".unity3d", "");
                     if(name.IndexOf(tempPath, StringComparison.CurrentCultureIgnoreCase) != -1) {
                         isFirstData = mXmlDataList[j].IsFirstData;
+                        isEncrypt = mXmlDataList[j].IsEncrypt;
                         isBreak = true;
                         break;
                     }
@@ -549,16 +628,63 @@ public class AssetBundleWindow : EditorWindow
                 if (isBreak) break;
             }
 
-            string strLine = string.Format("{0} {1} {2} {3}", name, md5, size, isFirstData ? 1 : 0);
+            string strLine = string.Format("{0}|{1}|{2}|{3}|{4}", name, md5, size, isFirstData ? 1 : 0, isEncrypt ? 1 : 0);
             sbr.AppendLine(strLine);
             
         }
         IOUtil.CreateTextFile(verPath, sbr.ToString());
-        Debug.Log("创建版本文件成功");
+
+        MMO_MemoryStream ms = new MMO_MemoryStream();
+        string str = sbr.ToString().Trim();
+        string[] arr = str.Split('\n');
+        int len = arr.Length;
+        ms.WriteInt(len);
+        for (int i = 0; i < len; i++) {
+            if(i == 0) {
+                ms.WriteUTF8String(arr[i]);
+            } else {
+                string[] arrInner = arr[i].Split('|');
+                ms.WriteUTF8String(arrInner[0]);
+                ms.WriteUTF8String(arrInner[1]);
+                ms.WriteInt(int.Parse(arrInner[2]));
+                ms.WriteByte(byte.Parse(arrInner[3]));
+                ms.WriteByte(byte.Parse(arrInner[4]));
+            }
+        }
+
+        string filePath = path + "/VersionFile.bytes";//版本文件路径(.bytes)
+        byte[] buffer = ms.ToArray();
+        buffer = ZlibHelper.CompressBytes(buffer);
+        FileStream fs = new FileStream(filePath, FileMode.Create);
+        fs.Write(buffer, 0, buffer.Length);
+        fs.Close();
     }
 
+    /// <summary>
+    /// 升级资源版本号
+    /// </summary>
+    private void OnUpdateVersionCallback() {
+        mAssetBundleDAL.UpdateVersion();
+    }
+
+    /// <summary>
+    /// 根据标签获取需要打包的列表
+    /// </summary>
+    private List<AssetBundleEntity> GetNeedBuildList() {
+        List<AssetBundleEntity> buildList = new List<AssetBundleEntity>();
+        foreach (var entity in mXmlDataList) {
+            if (mSelectDict[entity.Key])
+                buildList.Add(entity);
+        }
+        return buildList;
+    }
+
+    /// <summary>
+    /// 获取AssetBundle的存储路径
+    /// </summary>
+    /// <returns></returns>
     private string GetToPath() {
-        return Application.dataPath + "/../AssetBundles/" + mBuildTargets[mCurTagetIndex];
+        return Application.dataPath + "/../AssetBundles/" + mAssetBundleDAL.GetVersion() + "/" + mBuildTargets[mCurTagetIndex];
     }
 
 }
