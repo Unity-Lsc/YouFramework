@@ -116,6 +116,12 @@ namespace YouYou
                 if (mCallBack != null) {
                     mCallBackArgs.HasError = false;
                     mCallBackArgs.Value = data.downloadHandler.text;
+
+#if DEBUG_LOG_PROTO
+                    Debug.Log("<color=#00eaff>接收消息:</color><color=#00ff9c>" + data.url + "</color>");
+                    Debug.Log("<color=#c5e1dc>==>>" + JsonUtility.ToJson(mCallBackArgs) + "</color>");
+#endif
+
                     mCallBack(mCallBackArgs);
                 }
             }

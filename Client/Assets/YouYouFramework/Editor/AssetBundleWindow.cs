@@ -266,7 +266,6 @@ public class AssetBundleWindow : EditorWindow
             string[] arr = GetValidateFiles(fileInfos);
             build.assetNames = arr;
             mNeedBuildList.Add(build);
-            Debug.Log("path:" + path);
         } else {
             //每个文件打成一个包
             string[] arr = GetValidateFiles(fileInfos);
@@ -654,10 +653,15 @@ public class AssetBundleWindow : EditorWindow
 
         string filePath = path + "/VersionFile.bytes";//版本文件路径(.bytes)
         byte[] buffer = ms.ToArray();
+        ms.Dispose();
+        ms.Close();
+
         buffer = ZlibHelper.CompressBytes(buffer);
-        FileStream fs = new FileStream(filePath, FileMode.Create);
-        fs.Write(buffer, 0, buffer.Length);
-        fs.Close();
+        using (FileStream fs = new FileStream(filePath, FileMode.Create)) {
+            fs.Write(buffer, 0, buffer.Length);
+            fs.Close();
+            fs.Dispose();
+        }
     }
 
     /// <summary>

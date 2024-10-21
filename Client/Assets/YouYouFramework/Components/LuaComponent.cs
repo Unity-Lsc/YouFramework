@@ -29,7 +29,7 @@ namespace YouYou
         /// </summary>
         public MMO_MemoryStream LoadDataTable(string tableName) {
             //拿到这个表格的buffer
-            byte[] buffer = GameEntry.Resource.GetFileBuffer(string.Format("{0}/Download/DataTable/{1}.bytes", GameEntry.Resource.LocalFilePath, tableName));
+            byte[] buffer = IOUtil.GetFileBuffer(string.Format("{0}/Download/DataTable/{1}.bytes", GameEntry.Resource.LocalFilePath, tableName));
 
             mLoadDataTableMS.SetLength(0);
             mLoadDataTableMS.Write(buffer, 0, buffer.Length);

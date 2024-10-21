@@ -35,7 +35,7 @@ namespace YouYou
         /// </summary>
         public void LoadData() {
             //1.拿到这个表格的buffer
-            byte[] buffer = GameEntry.Resource.GetFileBuffer(string.Format("{0}/Download/DataTable/{1}.bytes", GameEntry.Resource.LocalFilePath, DataTableName));
+            byte[] buffer = IOUtil.GetFileBuffer(string.Format("{0}/Download/DataTable/{1}.bytes", GameEntry.Resource.LocalFilePath, DataTableName));
 
             //2.加载数据
             using(MMO_MemoryStream ms = new MMO_MemoryStream(buffer)) {

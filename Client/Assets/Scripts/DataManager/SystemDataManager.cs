@@ -10,9 +10,17 @@ public class SystemDataManager : IDisposable
     /// </summary>
     public long CurServerTime;
 
+    /// <summary>
+    /// 当前渠道设置
+    /// </summary>
+    public ChannelConfigEntity CurChannelConfig {
+        get;
+        private set;
+    }
+
 
     public SystemDataManager() {
-
+        CurChannelConfig = new ChannelConfigEntity();
     }
 
     /// <summary>

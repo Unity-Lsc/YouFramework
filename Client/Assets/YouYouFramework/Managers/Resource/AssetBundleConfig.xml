@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Root>
-  <AssetBundle ResourceVersion="1.0.8">
+  <AssetBundle ResourceVersion="1.0.1">
     <Item Name="声音" Tag="Audio" Overall="False" IsFirstData="False" IsEncrypt="False">
       <Path Value="Download/Audio" />
     </Item>
@@ -20,7 +20,7 @@
       <Path Value="Download/Effect" />
     </Item>
     <Item Name="初始场景" Tag="Scene" Overall="True" IsFirstData="True" IsEncrypt="False">
-      <Path Value="Download/Scene/Scene_SelectRole.unity" />
+      <Path Value="Download/Scene/InitScene" />
     </Item>
     <Item Name="其它场景" Tag="Scene" Overall="True" IsFirstData="False" IsEncrypt="False">
       <Path Value="Download/Scene/GameScene_ChangAn.unity" />

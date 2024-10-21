@@ -13,7 +13,9 @@ namespace YouYou
             base.OnEnter();
             Debug.Log("OnEnter ProcedureCheckVersion");
 
-            GameEntry.Procedure.ChangeState(ProcedureState.Preload);
+            GameEntry.Resource.InitStreamingAssetsBundleInfo();
+
+            //GameEntry.Procedure.ChangeState(ProcedureState.Preload);
         }
 
         public override void OnUpdate() {
