@@ -32,7 +32,7 @@ namespace YouYou
                 if(www.error == null) {
                     onComplete?.Invoke(www.bytes);
                 } else {
-                    Debug.LogError(www.error);
+                    onComplete?.Invoke(null);
                 }
             }
         }

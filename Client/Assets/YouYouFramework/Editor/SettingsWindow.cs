@@ -13,6 +13,7 @@ public class SettingsWindow : EditorWindow
     public SettingsWindow() {
 
         mList.Clear();
+        mList.Add(new MacorItem() { Name = "TEST_MODEL", DisplayName = "测试模式", IsDebug = true, IsRelease = false });
         mList.Add(new MacorItem() { Name = "DEBUG_MODEL", DisplayName = "调试模式", IsDebug = true, IsRelease = false });
         //mList.Add(new MacorItem() { Name = "DEBUG_LOG", DisplayName = "打印日志", IsDebug = true, IsRelease = false });
         mList.Add(new MacorItem() { Name = "DEBUG_LOG_NORMAL", DisplayName = "打印普通日志", IsDebug = true, IsRelease = false });

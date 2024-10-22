@@ -11,7 +11,6 @@ namespace YouYou
             base.OnEnter();
 
             GameEntry.Resource.InitStreamingAssetsBundleInfo();
-
             //GameEntry.Procedure.ChangeState(ProcedureState.Preload);
         }
 

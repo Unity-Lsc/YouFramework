@@ -11,12 +11,18 @@ namespace YouYou
     public class ResourceManager : ManagerBase, IDisposable
     {
         /// <summary>
-        /// StreamingAssets资源管理器
+        /// 只读区(StreamingAssets)资源管理器
         /// </summary>
         public StreamingAssetsManager StreamingAssetsManager { get; private set; }
 
+        /// <summary>
+        /// 可写区(persisdentDataPath)资源管理器
+        /// </summary>
+        public LocalAssetsManager LocalAssetsManager { get; private set; }
+
         public ResourceManager() {
             StreamingAssetsManager = new StreamingAssetsManager();
+            LocalAssetsManager = new LocalAssetsManager();
         }
 
         /// <summary>
@@ -59,17 +65,27 @@ namespace YouYou
         private Dictionary<string, AssetBundleInfoEntity> m_StreamingAssetsVersionDict;
 
         /// <summary>
+        /// 只读区是否存在资源包信息
+        /// </summary>
+        private bool m_IsExistStreamingAssetsVersionFile = false;
+
+        /// <summary>
         /// 初始化只读区资源包信息
         /// </summary>
         public void InitStreamingAssetsBundleInfo() {
-            ReadStreamingAssetsBundle("VersionFile.bytes", (byte[] buffer) => {
-                m_StreamingAssetsVersionDict = GetAssetBundleVersionList(buffer, ref m_StreamingAssetsVersion);
+            GameEntry.Log("初始化只读区资源包信息", LogCategory.Resource);
 
-                //Debug.Log("只读区资源版本号=>" + m_StreamingAssetsVersion);
+            ReadStreamingAssetsBundle(ConstDefine.VersionFileName, (byte[] buffer) => {
+                if(buffer != null) {
+                    m_IsExistStreamingAssetsVersionFile = true;
+                    m_StreamingAssetsVersionDict = GetAssetBundleVersionList(buffer, ref m_StreamingAssetsVersion);
 
-                //foreach (var item in m_StreamingAssetsVersionDict) {
-                //    Debug.Log(item.Value.AssetBundleName);
-                //}
+                    //GameEntry.Log("只读区资源版本号=>" + m_StreamingAssetsVersion, LogCategory.Resource);
+                    //foreach (var item in m_StreamingAssetsVersionDict) {
+                    //    GameEntry.Log(item.Value.AssetBundleName, LogCategory.Resource);
+                    //}
+                }
+                InitCDNAssetBundleInfo();
 
             });
         }
@@ -98,6 +114,11 @@ namespace YouYou
         /// 初始化CDN资源包信息
         /// </summary>
         private void InitCDNAssetBundleInfo() {
+#if TEST_MODEL
+            GameEntry.Data.SystemDataManager.CurChannelConfig.SourceUrl = "http://192.168.1.104:8081";
+            GameEntry.Data.SystemDataManager.CurChannelConfig.SourceVersion = "1.0.1";
+#endif
+
             string url = string.Format("{0}VersionFile.bytes", GameEntry.Data.SystemDataManager.CurChannelConfig.RealSourceUrl);
             GameEntry.Log(url, LogCategory.Resource);
             GameEntry.Http.SendData(url, OnInitCDNAssetBundleInfo, isGetData: true);
@@ -110,7 +131,10 @@ namespace YouYou
         private void OnInitCDNAssetBundleInfo(HttpCallBackArgs args) {
             if (!args.HasError) {
                 m_CDNVersionDict = GetAssetBundleVersionList(args.Data, ref m_CDNVersion);
-                GameEntry.Log("OnInitCDNAssetBundleInfo", LogCategory.Resource);
+                GameEntry.Log("初始化CDN资源包信息完成", LogCategory.Resource);
+
+                CheckVersionFileExistInLocal();
+
             } else {
                 GameEntry.Log(args.Value, LogCategory.Resource);
             }
@@ -118,9 +142,89 @@ namespace YouYou
 
         #endregion
 
+        #region 可写区
+
+        /// <summary>
+        /// 可写区资源版本号
+        /// </summary>
+        private string m_LocalAssetsVersion;
+
+        /// <summary>
+        /// 可写区资源包信息
+        /// </summary>
+        private Dictionary<string, AssetBundleInfoEntity> m_LocalAssetsVersionDict;
+
+        /// <summary>
+        /// 检查可写区版本文件是否存在
+        /// </summary>
+        private void CheckVersionFileExistInLocal() {
+            GameEntry.Log("检查可写区版本文件是否存在", LogCategory.Resource);
+
+            if (LocalAssetsManager.GetVersionFileIsExist()) {
+                //可写区存在资源版本文件,加载可写区的资源包信息(一般是第二次登陆)
+                InitLocalAssetsBundleInfo();
+            } else {
+                //可写区不存在资源版本文件,先判断只读区版本文件是否存在(一般是第一次登陆)
+                if (m_IsExistStreamingAssetsVersionFile) {
+                    //只读区存在版本文件,将其初始化到可写区
+                    InitVersionFileFromStreamingAssetsToLocal();
+                }
+                CheckVersionChange();
+            }
+
+        }
+
+        /// <summary>
+        /// 将只读区的版本文件初始化到可写区
+        /// </summary>
+        private void InitVersionFileFromStreamingAssetsToLocal() {
+            GameEntry.Log("将只读区的版本文件初始化到可写区", LogCategory.Resource);
+
+            m_LocalAssetsVersionDict = new Dictionary<string, AssetBundleInfoEntity>();
+
+            var enumerator = m_StreamingAssetsVersionDict.GetEnumerator();
+            while (enumerator.MoveNext()) {
+                var entity = enumerator.Current.Value;
+                m_LocalAssetsVersionDict[enumerator.Current.Key] = new AssetBundleInfoEntity() {
+                    AssetBundleName = entity.AssetBundleName,
+                    MD5 = entity.MD5,
+                    Size = entity.Size,
+                    IsFirstData = entity.IsFirstData,
+                    IsEncrypt = entity.IsEncrypt
+                };
+            }
+
+            //保存版本文件
+            LocalAssetsManager.SaveVersionFile(m_LocalAssetsVersionDict);
+            //保存版本号
+            m_LocalAssetsVersion = m_StreamingAssetsVersion;
+            LocalAssetsManager.SetResourceVersion(m_LocalAssetsVersion);
+
+        }
+
+        /// <summary>
+        /// 初始化可写区资源信息
+        /// </summary>
+        private void InitLocalAssetsBundleInfo() {
+            GameEntry.Log("初始化可写区资源信息", LogCategory.Resource);
+            m_LocalAssetsVersionDict = LocalAssetsManager.GetAssetBundleVersionList(ref m_LocalAssetsVersion);
+            CheckVersionChange();
+        }
+
+        /// <summary>
+        /// 检查更新
+        /// </summary>
+        private void CheckVersionChange() {
+            GameEntry.Log("开始进行检查更新...", LogCategory.Resource);
+        }
+
+        #endregion
+
 
         public void Dispose() {
-            m_StreamingAssetsVersionDict.Clear();
+            m_StreamingAssetsVersionDict?.Clear();
+            m_CDNVersionDict?.Clear();
+            m_LocalAssetsVersionDict?.Clear();
         }
     }
 }

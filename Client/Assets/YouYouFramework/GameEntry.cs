@@ -171,7 +171,7 @@ namespace YouYou
 #if DEBUG_LOG_PROCEDURE && DEBUG_MODEL
                     {
                         StringBuilder sbr = StringHelper.PoolNew();
-                        Debug.Log("[log]" + string.Format("<color=#ffffff>{0}</color>", args.Length == 0 ? message : sbr.AppendFormatNoGC(message, args).ToString()));
+                        Debug.Log("[log]" + string.Format("<color=#5FE6FF>{0}</color>", args.Length == 0 ? message : sbr.AppendFormatNoGC(message, args).ToString()));
                         StringHelper.PoolDel(ref sbr);
                     }
 #endif
@@ -189,7 +189,7 @@ namespace YouYou
 #if DEBUG_LOG_PROTO && DEBUG_MODEL
                     {
                         StringBuilder sbr = StringHelper.PoolNew();
-                        Debug.Log("[log]" + string.Format("<color=#c5e1dc>{0}</color>", args.Length == 0 ? message : sbr.AppendFormatNoGC(message, args).ToString()));
+                        Debug.Log("[log]" + string.Format("<color=#FFF299>{0}</color>", args.Length == 0 ? message : sbr.AppendFormatNoGC(message, args).ToString()));
                         StringHelper.PoolDel(ref sbr);
                     }
 #endif

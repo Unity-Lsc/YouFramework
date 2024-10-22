@@ -48,7 +48,8 @@ namespace YouYou
                 GameEntry.Data.SystemDataManager.CurChannelConfig.TDAppId = config["TDAppId"].ToString();
                 GameEntry.Data.SystemDataManager.CurChannelConfig.IsOpenTD = int.Parse(config["SourceVersion"].ToString()) == 1;
 
-                Debug.Log("RealSourceUrl" + GameEntry.Data.SystemDataManager.CurChannelConfig.RealSourceUrl);
+                //http://192.168.1.104:8081/1.0.6/Windows/
+                GameEntry.Log("RealSourceUrl=>" + GameEntry.Data.SystemDataManager.CurChannelConfig.RealSourceUrl, LogCategory.Resource);
                 GameEntry.Procedure.ChangeState(ProcedureState.CheckVersion);
             }
         }
