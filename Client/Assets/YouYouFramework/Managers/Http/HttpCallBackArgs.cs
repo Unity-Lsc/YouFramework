@@ -17,5 +17,10 @@ namespace YouYou
         /// </summary>
         public string Value;
 
+        /// <summary>
+        /// 字节数据
+        /// </summary>
+        public byte[] Data;
+
     }
 }

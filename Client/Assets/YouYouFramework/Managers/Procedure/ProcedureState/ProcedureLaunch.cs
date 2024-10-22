@@ -14,7 +14,7 @@ namespace YouYou
 
         public override void OnEnter() {
             base.OnEnter();
-            Debug.Log("OnEnter ProcedureLaunch");
+            //GameEntry.Log("OnEnter ProcedureLaunch", LogCategory.Procedure);
 
             ////访问帐号服务器
             //string url = GameEntry.Http.RealWebAccountUrl + "/api/init";

@@ -32,7 +32,7 @@ public class UITaskFrom : UIFormBase
             Close();
         });
         mBtnReceive.onClick.AddListener(() => {
-            Debug.Log("接受任务");
+            GameEntry.Log("接受任务");
             Close();
         });
         mScroller.OnItemCreate = OnItemCreate;

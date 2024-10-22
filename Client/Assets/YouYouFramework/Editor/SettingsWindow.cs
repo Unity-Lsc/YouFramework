@@ -14,8 +14,12 @@ public class SettingsWindow : EditorWindow
 
         mList.Clear();
         mList.Add(new MacorItem() { Name = "DEBUG_MODEL", DisplayName = "调试模式", IsDebug = true, IsRelease = false });
-        mList.Add(new MacorItem() { Name = "DEBUG_LOG", DisplayName = "打印日志", IsDebug = true, IsRelease = false });
+        //mList.Add(new MacorItem() { Name = "DEBUG_LOG", DisplayName = "打印日志", IsDebug = true, IsRelease = false });
+        mList.Add(new MacorItem() { Name = "DEBUG_LOG_NORMAL", DisplayName = "打印普通日志", IsDebug = true, IsRelease = false });
+        mList.Add(new MacorItem() { Name = "DEBUG_LOG_PROCEDURE", DisplayName = "打印流程日志", IsDebug = true, IsRelease = false });
+        mList.Add(new MacorItem() { Name = "DEBUG_LOG_RESOURCE", DisplayName = "打印资源日志", IsDebug = true, IsRelease = false });
         mList.Add(new MacorItem() { Name = "DEBUG_LOG_PROTO", DisplayName = "打印通讯日志", IsDebug = true, IsRelease = false });
+        mList.Add(new MacorItem() { Name = "DEBUG_LOG_ERROR", DisplayName = "打印错误日志", IsDebug = true, IsRelease = false });
         mList.Add(new MacorItem() { Name = "STAT_TD", DisplayName = "开启统计", IsDebug = false, IsRelease = true });
         mList.Add(new MacorItem() { Name = "DEBUG_ROLESTATE", DisplayName = "调试角色状态", IsDebug = false, IsRelease = false });
         mList.Add(new MacorItem() { Name = "DISABLE_ASSETBUNDLE", DisplayName = "禁用AssetBundle", IsDebug = false, IsRelease = false });

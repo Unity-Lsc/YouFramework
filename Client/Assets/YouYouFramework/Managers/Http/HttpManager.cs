@@ -12,10 +12,10 @@ namespace YouYou
         /// <summary>
         /// 发送Http数据
         /// </summary>
-        public void SendData(string url, HttpSendDataCallBack callback, bool isPost = false, Dictionary<string, object> dict = null) {
-            Debug.Log("从池中获取Http访问器");
+        public void SendData(string url, HttpSendDataCallBack callback, bool isPost = false, bool isGetData = false, Dictionary<string, object> dict = null) {
+            GameEntry.Log("从池中获取Http访问器", LogCategory.Proto);
             HttpRoutine http = GameEntry.Pool.DequeueClassObject<HttpRoutine>();
-            http.SendData(url, callback, isPost, dict);
+            http.SendData(url, callback, isPost, isGetData, dict);
         }
 
     }

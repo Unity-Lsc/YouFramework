@@ -119,7 +119,7 @@ public class Menu
         fs.Close();
 
         AssetDatabase.Refresh();
-        Debug.Log("初始资源拷贝到StreamAssets完毕");
+        GameEntry.Log("初始资源拷贝到StreamAssets完毕", LogCategory.Resource);
 
     }
 

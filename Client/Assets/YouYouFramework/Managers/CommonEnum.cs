@@ -66,3 +66,29 @@ public enum AssetCategory
     /// </summary>
     xLuaLogic
 }
+
+/// <summary>
+/// 日志分类
+/// </summary>
+public enum LogCategory
+{
+    /// <summary>
+    /// 普通日志
+    /// </summary>
+    Normal,
+
+    /// <summary>
+    /// 流程日志
+    /// </summary>
+    Procedure,
+
+    /// <summary>
+    /// 协议日志
+    /// </summary>
+    Proto,
+
+    /// <summary>
+    /// 资源管理
+    /// </summary>
+    Resource,
+}

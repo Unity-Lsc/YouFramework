@@ -176,7 +176,7 @@ public class AssetBundleWindow : EditorWindow
             case 9: SetTagToggle("Lua"); break;//Lua
             case 10: SetTagToggle("None"); break;//None
         }
-        Debug.LogFormat("当前选择的Tags:{0}", mTags[mCurTagIndex]);
+        GameEntry.Log("当前选择的Tags:{0}", LogCategory.Resource, mTags[mCurTagIndex]);
     }
 
     private void SetTagToggle(string tag) {
@@ -224,7 +224,7 @@ public class AssetBundleWindow : EditorWindow
         }
 
         if(mNeedBuildList.Count <= 0) {
-            Debug.Log("未找到需要打包的内容");
+            GameEntry.Log("未找到需要打包的内容", LogCategory.Resource);
             return;
         }
 
@@ -234,16 +234,16 @@ public class AssetBundleWindow : EditorWindow
         }
 
         BuildPipeline.BuildAssetBundles(toPath, mNeedBuildList.ToArray(), BuildAssetBundleOptions.None, mCurBuildTarget);
-        Debug.Log("打包完毕");
+        GameEntry.Log("打包完毕", LogCategory.Resource);
 
         AssetBundleEncrypt();
-        Debug.Log("资源包加密完毕");
+        GameEntry.Log("资源包加密完毕", LogCategory.Resource);
 
         CreateDependenciesFile();
-        Debug.Log("生成资源依赖文件 AssetInfo.bytes 完毕");
+        GameEntry.Log("生成资源依赖文件 AssetInfo.bytes 完毕", LogCategory.Resource);
 
         OnCreateVersionFileCallback();
-        Debug.Log("创建版本文件成功");
+        GameEntry.Log("创建版本文件成功", LogCategory.Resource);
 
     }
 
@@ -349,7 +349,7 @@ public class AssetBundleWindow : EditorWindow
         }
         string strJsonFilePath = targetPath + "/AssetInfo.json"; //Json文件路径
         IOUtil.CreateTextFile(strJsonFilePath, LitJson.JsonMapper.ToJson(assetList));
-        Debug.Log("生成资源依赖文件 AssetInfo.json 完毕");
+        GameEntry.Log("生成资源依赖文件 AssetInfo.json 完毕", LogCategory.Resource);
 
         MMO_MemoryStream ms = new MMO_MemoryStream();
         //生成二进制文件
@@ -556,7 +556,7 @@ public class AssetBundleWindow : EditorWindow
         if (Directory.Exists(path)) {
             Directory.Delete(path, true);
         }
-        Debug.Log("清空AssetBundle完毕");
+        GameEntry.Log("清空AssetBundle完毕", LogCategory.Resource);
     }
 
     /// <summary>
@@ -651,7 +651,7 @@ public class AssetBundleWindow : EditorWindow
             }
         }
 
-        string filePath = path + "/VersionFile.bytes";//版本文件路径(.bytes)
+        string filePath = path + "/" + ConstDefine.VersionFileName;//版本文件路径(.bytes)
         byte[] buffer = ms.ToArray();
         ms.Dispose();
         ms.Close();

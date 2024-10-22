@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 namespace YouYou 
@@ -52,13 +53,6 @@ namespace YouYou
             //循环 更新组件
             for (LinkedListNode<IUpdateComponent> curComp = mUpdateCompanentList.First; curComp != null; curComp = curComp.Next) {
                 curComp.Value.OnUpdate();
-            }
-        }
-
-        private void OnDestroy() {
-            //关闭所有的基础组件
-            for (LinkedListNode<YouYouBaseComponent> curComp = mBaseCompanentList.First; curComp != null; curComp = curComp.Next) {
-                curComp.Value.Shutdown();
             }
         }
 
@@ -150,6 +144,69 @@ namespace YouYou
         }
 
         #endregion
+
+        private void OnDestroy() {
+            //关闭所有的基础组件
+            for (LinkedListNode<YouYouBaseComponent> curComp = mBaseCompanentList.First; curComp != null; curComp = curComp.Next) {
+                curComp.Value.Shutdown();
+            }
+        }
+
+        /// <summary>
+        /// 打印日志
+        /// </summary>
+        public static void Log(string message, LogCategory category = LogCategory.Normal, params object[] args) {
+            switch (category) {
+                default:
+                case LogCategory.Normal:
+#if DEBUG_LOG_NORMAL && DEBUG_MODEL
+                    {
+                        StringBuilder sbr = StringHelper.PoolNew();
+                        Debug.Log("[log]" + (args.Length == 0 ? message : sbr.AppendFormatNoGC(message, args).ToString()));
+                        StringHelper.PoolDel(ref sbr);
+                    }
+#endif
+                    break;
+                case LogCategory.Procedure:
+#if DEBUG_LOG_PROCEDURE && DEBUG_MODEL
+                    {
+                        StringBuilder sbr = StringHelper.PoolNew();
+                        Debug.Log("[log]" + string.Format("<color=#ffffff>{0}</color>", args.Length == 0 ? message : sbr.AppendFormatNoGC(message, args).ToString()));
+                        StringHelper.PoolDel(ref sbr);
+                    }
+#endif
+                    break;
+                case LogCategory.Resource:
+#if DEBUG_LOG_RESOURCE && DEBUG_MODEL
+                    {
+                        StringBuilder sbr = StringHelper.PoolNew();
+                        Debug.Log("[log]" + string.Format("<color=#ace44a>{0}</color>", args.Length == 0 ? message : sbr.AppendFormatNoGC(message, args).ToString()));
+                        StringHelper.PoolDel(ref sbr);
+                    }
+#endif
+                    break;
+                case LogCategory.Proto:
+#if DEBUG_LOG_PROTO && DEBUG_MODEL
+                    {
+                        StringBuilder sbr = StringHelper.PoolNew();
+                        Debug.Log("[log]" + string.Format("<color=#c5e1dc>{0}</color>", args.Length == 0 ? message : sbr.AppendFormatNoGC(message, args).ToString()));
+                        StringHelper.PoolDel(ref sbr);
+                    }
+#endif
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// 打印错误日志
+        /// </summary>
+        public static void LogError(string message, params object[] args) {
+#if DEBUG_LOG_ERROR && DEBUG_MODEL
+            StringBuilder sbr = StringHelper.PoolNew();
+            Debug.LogError("[log]" + (args.Length == 0 ? message : sbr.AppendFormatNoGC(message, args).ToString()));
+            StringHelper.PoolDel(ref sbr);
+#endif
+        }
 
     }
 

@@ -30,6 +30,11 @@ namespace YouYou
         /// </summary>
         public bool IsBusy { get; private set; }
 
+        /// <summary>
+        /// 获取的是否为Data数据
+        /// </summary>
+        private bool m_IsGetData = false;
+
         public HttpRoutine() {
             mCallBackArgs = new HttpCallBackArgs();
         }
@@ -37,11 +42,17 @@ namespace YouYou
         /// <summary>
         /// 发送Http数据
         /// </summary>
-        public void SendData(string url, HttpSendDataCallBack callback, bool isPost = false, Dictionary<string, object> dict = null) {
+        /// <param name="url"></param>
+        /// <param name="callback"></param>
+        /// <param name="isPost"></param>
+        /// <param name="isGetData">是否获取字节数据</param>
+        /// <param name="dict"></param>
+        public void SendData(string url, HttpSendDataCallBack callback, bool isPost = false, bool isGetData = false, Dictionary<string, object> dict = null) {
             if (IsBusy) return;
 
             IsBusy = true;
             mCallBack = callback;
+            m_IsGetData = isGetData;
 
             if(!isPost) {
                 GetUrl(url);
@@ -116,19 +127,18 @@ namespace YouYou
                 if (mCallBack != null) {
                     mCallBackArgs.HasError = false;
                     mCallBackArgs.Value = data.downloadHandler.text;
-
-#if DEBUG_LOG_PROTO
-                    Debug.Log("<color=#00eaff>接收消息:</color><color=#00ff9c>" + data.url + "</color>");
-                    Debug.Log("<color=#c5e1dc>==>>" + JsonUtility.ToJson(mCallBackArgs) + "</color>");
-#endif
-
+                    if (!m_IsGetData) {
+                        GameEntry.Log("<color=#00eaff>接收消息:</color><color=#00ff9c>" + data.url + "</color>", LogCategory.Proto);
+                        GameEntry.Log("<color=#c5e1dc>==>>" + JsonUtility.ToJson(mCallBackArgs) + "</color>", LogCategory.Proto);
+                    }
+                    mCallBackArgs.Data = data.downloadHandler.data;
                     mCallBack(mCallBackArgs);
                 }
             }
             data.Dispose();
             data = null;
 
-            Debug.Log("把Http访问器回池");
+            GameEntry.Log("把Http访问器回池", LogCategory.Proto);
             GameEntry.Pool.EnqueueClassObject(this);
 
         }

@@ -47,6 +47,7 @@ namespace YouYou
         }
 
         #region 只读区StreamingAssets
+
         /// <summary>
         /// 只读区资源版本号
         /// </summary>
@@ -78,6 +79,41 @@ namespace YouYou
         /// </summary>
         internal void ReadStreamingAssetsBundle(string fileUrl, Action<byte[]> onComplete) {
             StreamingAssetsManager.ReadAssetBundle(fileUrl, onComplete);
+        }
+
+        #endregion
+
+        #region CDN
+
+        /// <summary>
+        /// CDN资源版本号
+        /// </summary>
+        private string m_CDNVersion;
+        /// <summary>
+        /// CDN资源包信息
+        /// </summary>
+        private Dictionary<string, AssetBundleInfoEntity> m_CDNVersionDict;
+
+        /// <summary>
+        /// 初始化CDN资源包信息
+        /// </summary>
+        private void InitCDNAssetBundleInfo() {
+            string url = string.Format("{0}VersionFile.bytes", GameEntry.Data.SystemDataManager.CurChannelConfig.RealSourceUrl);
+            GameEntry.Log(url, LogCategory.Resource);
+            GameEntry.Http.SendData(url, OnInitCDNAssetBundleInfo, isGetData: true);
+        }
+
+        /// <summary>
+        /// 初始化CDN资源包信息回调
+        /// </summary>
+        /// <param name="args"></param>
+        private void OnInitCDNAssetBundleInfo(HttpCallBackArgs args) {
+            if (!args.HasError) {
+                m_CDNVersionDict = GetAssetBundleVersionList(args.Data, ref m_CDNVersion);
+                GameEntry.Log("OnInitCDNAssetBundleInfo", LogCategory.Resource);
+            } else {
+                GameEntry.Log(args.Value, LogCategory.Resource);
+            }
         }
 
         #endregion

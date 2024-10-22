@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace YouYou
@@ -11,7 +9,6 @@ namespace YouYou
     {
         public override void OnEnter() {
             base.OnEnter();
-            Debug.Log("OnEnter ProcedureCheckVersion");
 
             GameEntry.Resource.InitStreamingAssetsBundleInfo();
 

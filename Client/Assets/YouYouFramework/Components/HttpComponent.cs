@@ -38,8 +38,8 @@ namespace YouYou
         /// <summary>
         /// 发送Http数据
         /// </summary>
-        public void SendData(string url, HttpSendDataCallBack callback, bool isPost = false, Dictionary<string, object> dict = null) {
-            mHttpManager.SendData(url, callback, isPost, dict);
+        public void SendData(string url, HttpSendDataCallBack callback, bool isPost = false, bool isGetData = false, Dictionary<string, object> dict = null) {
+            mHttpManager.SendData(url, callback, isPost, isGetData, dict);
         }
 
         public override void Shutdown() {
