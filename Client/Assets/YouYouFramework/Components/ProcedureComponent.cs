@@ -65,6 +65,8 @@ namespace YouYou
 
         public override void Shutdown() {
             mProcedureManager.Dispose();
+
+            GameEntry.RemoveUpdateComponent(this);
         }
     }
 }

@@ -47,6 +47,8 @@ namespace YouYou
 
         public override void Shutdown() {
             mTimeManager.Dispose();
+
+            GameEntry.RemoveUpdateComponent(this);
         }
     }
 }

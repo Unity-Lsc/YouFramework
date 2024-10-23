@@ -212,10 +212,38 @@ namespace YouYou
         }
 
         /// <summary>
+        /// 获取资源包的信息(这个方法要一定能返回资源信息)
+        /// </summary>
+        /// <param name="abPath">资源包路径</param>
+        public AssetBundleInfoEntity GetAssetBundleInfoEntity(string abPath) {
+            m_CDNVersionDict.TryGetValue(abPath, out var entity);
+            return entity;
+        }
+
+        /// <summary>
         /// 检查更新
         /// </summary>
         private void CheckVersionChange() {
             GameEntry.Log("开始进行检查更新...", LogCategory.Resource);
+
+            if (LocalAssetsManager.GetVersionFileIsExist()) {
+                //判断只读区资源版本号和CDN资源版本号是否一致
+                if (m_StreamingAssetsVersion.Equals(m_CDNVersion)) {
+                    GameEntry.Log("只读区资源版本号和CDN资源版本号一致", LogCategory.Resource);
+                    //进入预加载流程
+                    GameEntry.Procedure.ChangeState(ProcedureState.Preload);
+                } else {
+                    GameEntry.Log("只读区资源版本号和CDN资源版本号不一致", LogCategory.Resource);
+
+                    //TODO: 不一致,开始检查更新
+
+                    //然后再进入预加载流程
+
+                }
+            } else {
+                //TODO: 开始下载初始资源
+            }
+
         }
 
         #endregion

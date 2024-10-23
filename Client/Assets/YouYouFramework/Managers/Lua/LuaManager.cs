@@ -27,7 +27,7 @@ namespace YouYou
             luaEnv.AddLoader(MyLoader);
             //mLuaEnv.DoString(string.Format("package.path = '{0}/?.bytes'", Application.persistentDataPath));
 #endif
-            luaEnv.DoString("require 'Main'");
+            //luaEnv.DoString("require 'Main'");
         }
 
         /// <summary>
@@ -36,12 +36,12 @@ namespace YouYou
         private byte[] MyLoader(ref string filePath) {
             string path = Application.persistentDataPath + "/" + filePath + ".lua";
             byte[] buffer = null;
-            using (FileStream fs = new FileStream(path, FileMode.Open)) {
-                buffer = new byte[fs.Length];
-                fs.Read(buffer, 0, buffer.Length);
-            }
-            buffer = SecurityUtil.Xor(buffer);
-            buffer = System.Text.Encoding.UTF8.GetBytes(System.Text.Encoding.UTF8.GetString(buffer).Trim());
+            //using (FileStream fs = new FileStream(path, FileMode.Open)) {
+            //    buffer = new byte[fs.Length];
+            //    fs.Read(buffer, 0, buffer.Length);
+            //}
+            //buffer = SecurityUtil.Xor(buffer);
+            //buffer = System.Text.Encoding.UTF8.GetBytes(System.Text.Encoding.UTF8.GetString(buffer).Trim());
             return buffer;
         }
 
@@ -49,7 +49,7 @@ namespace YouYou
         /// 执行lua脚本
         /// </summary>
         public void DoString(string str) {
-            luaEnv.DoString(str);
+            //luaEnv.DoString(str);
         }
 
 

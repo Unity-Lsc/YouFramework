@@ -262,7 +262,7 @@ public class AssetBundleWindow : EditorWindow
             //打成一个资源包
             AssetBundleBuild build = new AssetBundleBuild();
             build.assetBundleName = path;
-            build.assetBundleVariant = isScene ? "unity3d" : "assetbundle";
+            build.assetBundleVariant = "assetbundle";
             string[] arr = GetValidateFiles(fileInfos);
             build.assetNames = arr;
             mNeedBuildList.Add(build);
@@ -496,7 +496,7 @@ public class AssetBundleWindow : EditorWindow
                 for (int j = 0; j < entity.PathList.Count; j++) {
                     string path = GetToPath() + "/" + entity.PathList[j];
                     if (entity.Overall) {
-                        string str = entity.Tag == "Scene" ? ".unity3d" : ".assetbundle";
+                        string str = ".assetbundle";
                         path = path + str;
                         EncryptFile(path);
                     } else {
@@ -525,7 +525,7 @@ public class AssetBundleWindow : EditorWindow
     /// <param name="filePath">要加密文件的路径</param>
     private void EncryptFile(string filePath) {
         FileInfo fileInfo = new FileInfo(filePath);
-        if(!fileInfo.Extension.Equals(".assetbundle", StringComparison.CurrentCultureIgnoreCase) && !fileInfo.Extension.Equals(".unity3d", StringComparison.CurrentCultureIgnoreCase)) {
+        if(!fileInfo.Extension.Equals(".assetbundle", StringComparison.CurrentCultureIgnoreCase)) {
             return;
         }
 
@@ -616,7 +616,7 @@ public class AssetBundleWindow : EditorWindow
                     if(xmlPath.IndexOf(".") != -1) {
                         tempPath = xmlPath.Substring(0, xmlPath.IndexOf("."));
                     }
-                    name = name.Replace("\\", "/").Replace(".assetbundle", "").Replace(".unity3d", "");
+                    name = name.Replace("\\", "/");
                     if(name.IndexOf(tempPath, StringComparison.CurrentCultureIgnoreCase) != -1) {
                         isFirstData = mXmlDataList[j].IsFirstData;
                         isEncrypt = mXmlDataList[j].IsEncrypt;

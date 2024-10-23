@@ -51,5 +51,12 @@ namespace YouYou
             return JsonMapper.ToObject<Dictionary<string, AssetBundleInfoEntity>>(json);
         }
 
+        /// <summary>
+        /// 获取本地文件的字节数组
+        /// </summary>
+        public byte[] GetFileBuffer(string path) {
+            return IOUtil.GetFileBuffer(string.Format("{0}/{1}", Application.persistentDataPath, path));
+        }
+
     }
 }

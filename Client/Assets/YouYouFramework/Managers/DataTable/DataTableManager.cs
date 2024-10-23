@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace YouYou
 {
@@ -50,13 +51,22 @@ namespace YouYou
             DTTaskDBModel = new DTTaskDBModel();
         }
 
+        private AssetBundle m_DataTableBundle;
+
         /// <summary>
         /// 异步加载表格
         /// </summary>
         public void LoadDataTableAsync() {
-
+#if DISABLE_ASSETBUNDLE
             Task.Factory.StartNew(LoadDataTable);
+#else
+            GameEntry.Resource.ResourceLoaderManager.LoadAssetBundle("download/datatable.assetbundle", null, OnLoadComplete);
+#endif
+        }
 
+        private void OnLoadComplete(AssetBundle bundle) {
+            m_DataTableBundle = bundle;
+            GameEntry.Log("LoadDataTableAsync拿到了Bundle");
         }
 
         /// <summary>

@@ -11,6 +11,7 @@ namespace YouYou
     {
         public override void OnEnter() {
             base.OnEnter();
+            GameEntry.Resource.InitAssetInfo();
             GameEntry.Event.CommonEvent.AddListener(SystemEventId.LoadOneDataTableComplete, OnLoadOneDataTableComplete);
             GameEntry.Event.CommonEvent.AddListener(SystemEventId.LoadDataTableComplete, OnLoadDataTableComplete);
             GameEntry.DataTable.LoadDataTableAsync();

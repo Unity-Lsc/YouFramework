@@ -35,6 +35,7 @@ namespace YouYou
         private void InitResidentCount() {
             SetClassObjectResidentCount<HttpRoutine>(3);
             SetClassObjectResidentCount<Dictionary<string, object>>(3);
+            SetClassObjectResidentCount<AssetBundleLoaderRoutine>(10);
         }
 
         #region 类对象池相关
@@ -174,6 +175,8 @@ namespace YouYou
         /// </summary>
         public override void Shutdown() {
             PoolManager.Dispose();
+
+            GameEntry.RemoveUpdateComponent(this);
         }
 
     }

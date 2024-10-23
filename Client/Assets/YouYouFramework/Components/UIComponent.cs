@@ -204,7 +204,11 @@ namespace YouYou
         }
 
         public override void Shutdown() {
-            
+            mUIGroupDict?.Clear();
+            mUIGroupDict = null;
+            UIGroups = null;
+
+            GameEntry.RemoveUpdateComponent(this);
         }
     }
 }

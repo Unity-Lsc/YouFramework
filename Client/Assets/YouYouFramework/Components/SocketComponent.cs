@@ -92,6 +92,8 @@ namespace YouYou
 
             SocketSendMS.Close();
             SocketReceiveMS.Close();
+
+            GameEntry.RemoveUpdateComponent(this);
         }
 
         /// <summary>

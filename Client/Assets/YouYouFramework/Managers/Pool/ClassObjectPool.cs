@@ -71,7 +71,7 @@ namespace YouYou
         /// <param name="obj">要回收的对象</param>
         public void Enqueue(object obj) {
             lock(mClassObjectPoolDict) {
-                GameEntry.Log("对象回池:" + obj.GetType().Name);
+                //GameEntry.Log("对象回池:" + obj.GetType().Name);
                 int key = obj.GetType().GetHashCode();
                 Queue<object> queue = null;
                 mClassObjectPoolDict.TryGetValue(key, out queue);
