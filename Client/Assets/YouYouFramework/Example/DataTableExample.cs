@@ -37,11 +37,11 @@ public class DataTableExample : MonoBehaviour
         //        Debug.Log("Path:" + entity.AssetPath_Chinese);
         //    }
         //}
-        if (Input.GetKeyUp(KeyCode.W)) {
-            string str;
-            GameEntry.DataTable.DataTableManager.LocalizationDBModel.LocalizationDict.TryGetValue("Loading.CheckVersion", out str);
-            Debug.Log(str);
-        }
+        //if (Input.GetKeyUp(KeyCode.W)) {
+        //    string str;
+        //    GameEntry.DataTable.DataTableManager.LocalizationDBModel.LocalizationDict.TryGetValue("Loading.CheckVersion", out str);
+        //    Debug.Log(str);
+        //}
     }
 
 }

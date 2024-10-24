@@ -4,7 +4,7 @@ using UnityEngine;
 namespace YouYou
 {
     /// <summary>
-    /// 资源加载器
+    /// 资源包加载器
     /// </summary>
     public class AssetBundleLoaderRoutine
     {

@@ -19,6 +19,11 @@ namespace YouYou
         /// </summary>
         private LinkedList<AssetBundleLoaderRoutine> m_AssetBundleLoaderList;
 
+        /// <summary>
+        /// 资源加载器列表
+        /// </summary>
+        private LinkedList<AssetLoaderRoutine> m_AssetLoaderList;
+
 
 
         public ResourceLoaderManager() {
@@ -31,6 +36,7 @@ namespace YouYou
             }
 
             m_AssetBundleLoaderList = new LinkedList<AssetBundleLoaderRoutine>();
+            m_AssetLoaderList = new LinkedList<AssetLoaderRoutine>();
 
         }
 
@@ -131,16 +137,53 @@ namespace YouYou
         }
 
         /// <summary>
+        /// 加载资源
+        /// </summary>
+        /// <param name="assetName">资源名字</param>
+        /// <param name="assetBundle">所属的资源包</param>
+        /// <param name="onUpdate">加载中回调</param>
+        /// <param name="onComplete">加载完毕回调</param>
+        public void LoadAsset(string assetName, AssetBundle assetBundle, Action<float> onUpdate = null, Action<UnityEngine.Object> onComplete = null) {
+            var routine = GameEntry.Pool.DequeueClassObject<AssetLoaderRoutine>();
+            if (routine == null) routine = new AssetLoaderRoutine();
+
+            //加入列表开始循环
+            m_AssetLoaderList.AddLast(routine);
+
+            routine.LoadAsset(assetName, assetBundle);
+            routine.OnLoadAssetUpdate = (float progress) => {
+                onUpdate?.Invoke(progress);
+            };
+            routine.OnLoadAssetComplete = (UnityEngine.Object obj) => {
+                onComplete?.Invoke(obj);
+
+                //结束循环 回池
+                m_AssetLoaderList.Remove(routine);
+                GameEntry.Pool.EnqueueClassObject(routine);
+            };
+
+
+        }
+
+        /// <summary>
         /// 更新
         /// </summary>
         public void OnUpdate() {
             for (var cur = m_AssetBundleLoaderList.First; cur != null; cur = cur.Next) {
                 cur.Value.OnUpdate();
             }
+
+            for (var cur = m_AssetLoaderList.First; cur != null; cur = cur.Next) {
+                cur.Value.OnUpdate();
+            }
+
         }
 
         public void Dispose() {
             m_AssetInfoDict.Clear();
+
+            m_AssetBundleLoaderList.Clear();
+            m_AssetLoaderList.Clear();
         }
     }
 }

@@ -36,14 +36,17 @@ namespace YouYou
         /// 加载单一表完毕
         /// </summary>
         private void OnLoadOneDataTableComplete(object param) {
-            //Debug.Log("tableName:" + param);
+            GameEntry.DataTable.DataTableManager.CurLoadCount++;
+            if(GameEntry.DataTable.DataTableManager.CurLoadCount == GameEntry.DataTable.DataTableManager.TotalLoadCount) {
+                GameEntry.Event.CommonEvent.Dispatch(SystemEventId.LoadDataTableComplete);
+            }
         }
 
         /// <summary>
         /// 加载全部表完毕
         /// </summary>
         private void OnLoadDataTableComplete(object param) {
-            //Debug.Log("加载所有表完毕");
+            GameEntry.Log("加载所有表完毕");
         }
 
     }

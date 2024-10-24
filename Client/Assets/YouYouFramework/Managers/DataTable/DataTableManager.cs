@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace YouYou
     /// </summary>
     public class DataTableManager : ManagerBase
     {
-        
+        #region 表格属性
+
         public DTSysAudioDBModel DTSysAudioDBModel { get; private set; }
         public DTSysCodeDBModel DTSysCodeDBModel { get; private set; }
         public DTSysCommonEventIdDBModel DTSysCommonEventIdDBModel { get; private set; }
@@ -24,6 +26,18 @@ namespace YouYou
         public DTEquipDBModel DTEquipDBModel { get; private set; }
         public DTShopDBModel DTShopDBModel { get; private set; }
         public DTTaskDBModel DTTaskDBModel { get; private set; }
+
+        #endregion
+
+        /// <summary>
+        /// 总共要加载的表格数量
+        /// </summary>
+        public int TotalLoadCount = 0;
+
+        /// <summary>
+        /// 当前已经加载完毕的表格数量
+        /// </summary>
+        public int CurLoadCount = 0;
 
         public DataTableManager() {
             InitDBModel();
@@ -60,13 +74,35 @@ namespace YouYou
 #if DISABLE_ASSETBUNDLE
             Task.Factory.StartNew(LoadDataTable);
 #else
-            GameEntry.Resource.ResourceLoaderManager.LoadAssetBundle("download/datatable.assetbundle", null, OnLoadComplete);
+            GameEntry.Resource.ResourceLoaderManager.LoadAssetBundle("download/datatable.assetbundle",
+                onUpdate : (float progress) => {
+                    GameEntry.Log("加载进度:" + progress);
+                },
+                onComplete: (AssetBundle bundle) => {
+                    m_DataTableBundle = bundle;
+                    LoadDataTable();
+                    GameEntry.Log("LoadDataTableAsync拿到了Bundle");
+                }
+                );
 #endif
         }
 
-        private void OnLoadComplete(AssetBundle bundle) {
-            m_DataTableBundle = bundle;
-            GameEntry.Log("LoadDataTableAsync拿到了Bundle");
+        /// <summary>
+        /// 获取表格的字节数组
+        /// </summary>
+        /// <param name="tableName">表格名字</param>
+        /// <param name="onComplete">完成回调</param>
+        public void GetDataTableBuffer(string tableName, Action<byte[]> onComplete) {
+#if DISABLE_ASSETBUNDLE
+            byte[] buffer = IOUtil.GetFileBuffer(string.Format("{0}/Download/DataTable/{1}.bytes", GameEntry.Resource.LocalFilePath, tableName));
+            onComplete?.Invoke(buffer);
+#else
+            GameEntry.Resource.ResourceLoaderManager.LoadAsset(GameEntry.Resource.GetLasrPathName(tableName), m_DataTableBundle,
+                onComplete: (UnityEngine.Object obj) => {
+                    TextAsset asset = obj as TextAsset;
+                    onComplete?.Invoke(asset.bytes);
+                });
+#endif
         }
 
         /// <summary>
@@ -89,9 +125,6 @@ namespace YouYou
             DTEquipDBModel.LoadData();
             DTShopDBModel.LoadData();
             DTTaskDBModel.LoadData();
-
-            //load完毕
-            GameEntry.Event.CommonEvent.Dispatch(SystemEventId.LoadDataTableComplete);   
         }
 
         public void Clear() {

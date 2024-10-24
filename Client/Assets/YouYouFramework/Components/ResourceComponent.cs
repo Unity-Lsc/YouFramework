@@ -53,6 +53,17 @@ namespace YouYou
             ResourceLoaderManager.OnUpdate();
         }
 
+        /// <summary>
+        /// 获取路径的最后名称
+        /// </summary>
+        /// <param name="path"></param>
+        public string GetLasrPathName(string path) {
+            if(path.IndexOf('/') == -1) {
+                return path;
+            }
+            return path.Substring(path.LastIndexOf('/') + 1);
+        }
+
         public override void Shutdown() {
             ResourceManager.Dispose();
             ResourceLoaderManager.Dispose();

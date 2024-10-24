@@ -33,9 +33,14 @@ namespace YouYou
         /// 初始化常用类的常驻数量
         /// </summary>
         private void InitResidentCount() {
+            //设置Http访问器的常驻数量
             SetClassObjectResidentCount<HttpRoutine>(3);
+            //设置常用字典的常驻数量
             SetClassObjectResidentCount<Dictionary<string, object>>(3);
+            //设置资源包加载器的常驻数量
             SetClassObjectResidentCount<AssetBundleLoaderRoutine>(10);
+            //设置资源加载器的常驻数量
+            SetClassObjectResidentCount<AssetLoaderRoutine>(10);
         }
 
         #region 类对象池相关

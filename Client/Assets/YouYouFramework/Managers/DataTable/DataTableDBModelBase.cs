@@ -34,17 +34,17 @@ namespace YouYou
         /// 加载数据表数据
         /// </summary>
         public void LoadData() {
-            //1.拿到这个表格的buffer
-            byte[] buffer = IOUtil.GetFileBuffer(string.Format("{0}/Download/DataTable/{1}.bytes", GameEntry.Resource.LocalFilePath, DataTableName));
 
-            //2.加载数据
-            using(MMO_MemoryStream ms = new MMO_MemoryStream(buffer)) {
-                LoadList(ms);
-            }
+            GameEntry.DataTable.DataTableManager.TotalLoadCount++;
 
-            //3.派发单个表格加载完毕的事件(参数的表格名字)
-            GameEntry.Event.CommonEvent.Dispatch(SystemEventId.LoadOneDataTableComplete, DataTableName);
-
+            //拿到这个表格的buffer
+            GameEntry.DataTable.DataTableManager.GetDataTableBuffer(DataTableName, (byte[] buffer) => {
+                using (MMO_MemoryStream ms = new MMO_MemoryStream(buffer)) {
+                    LoadList(ms);
+                }
+                //派发单个表格加载完毕的事件(参数的表格名字)
+                GameEntry.Event.CommonEvent.Dispatch(SystemEventId.LoadOneDataTableComplete, DataTableName);
+            });
         }
 
         public List<P> GetList() {
