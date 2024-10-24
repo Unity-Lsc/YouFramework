@@ -10,14 +10,19 @@ namespace YouYou
     public class PoolComponentInspector : Editor
     {
         /// <summary>
-        /// 释放间隔 的属性
+        /// 类对象池 释放间隔 的属性
         /// </summary>
-        private SerializedProperty mClearInterval = null;
+        private SerializedProperty mReleaseClassObjectInterval = null;
 
         /// <summary>
         /// 游戏物体对象池分组 的属性
         /// </summary>
         private SerializedProperty mGameObjectPoolEntityGroup = null;
+
+        /// <summary>
+        /// 资源包对象池释放间隔的属性
+        /// </summary>
+        private SerializedProperty mReleaseResourceInterval = null;
 
         public override void OnInspectorGUI() {
             //base.OnInspectorGUI();//显示父节点(PoolComponent)中的属性
@@ -26,14 +31,15 @@ namespace YouYou
 
             var component = base.target as PoolComponent;
 
-            //绘制滑动条
-            int clearInterval = (int)EditorGUILayout.Slider("清空类对象池的时间间隔", mClearInterval.intValue, 10, 1800);
-            if (clearInterval != mClearInterval.intValue) {
-                component.ClearInterval = clearInterval;
-            } else {
-                mClearInterval.intValue = clearInterval;
-            }
             #region 类对象池
+            //绘制滑动条
+            int clearInterval = (int)EditorGUILayout.Slider("清空类对象池的时间间隔", mReleaseClassObjectInterval.intValue, 10, 1800);
+            if (clearInterval != mReleaseClassObjectInterval.intValue) {
+                component.ReleaseClassObjectInterval = clearInterval;
+            } else {
+                mReleaseClassObjectInterval.intValue = clearInterval;
+            }
+            
             GUILayout.Space(10);
             GUILayout.BeginVertical("box");
             GUILayout.BeginHorizontal("box");
@@ -82,8 +88,42 @@ namespace YouYou
             GUILayout.EndVertical();
             #endregion
 
+            #region 游戏物体对象池
             GUILayout.Space(10);
             EditorGUILayout.PropertyField(mGameObjectPoolEntityGroup, true);
+            #endregion
+
+            GUILayout.Space(10);
+
+            #region 资源包对象池
+
+            //绘制滑动条 释放资源包对象池间隔
+            int releaseAssetBundleInterval = (int)EditorGUILayout.Slider("释放资源包对象池的时间间隔", mReleaseResourceInterval.intValue, 10, 1800);
+            if(releaseAssetBundleInterval != mReleaseResourceInterval.intValue) {
+                component.ReleaseResourceInterval = releaseAssetBundleInterval;
+            } else {
+                mReleaseResourceInterval.intValue = releaseAssetBundleInterval;
+            }
+
+            GUILayout.Space(10);
+            GUILayout.BeginVertical("box");
+            GUILayout.BeginHorizontal("box");
+            GUILayout.Label("资源包");
+            GUILayout.Label("数量", GUILayout.Width(50));
+            GUILayout.EndHorizontal();
+
+            if(component != null && component.PoolManager != null) {
+                foreach (var item in component.PoolManager.AssetBundlePool.InspectorDict) {
+                    GUILayout.BeginHorizontal("box");
+                    GUILayout.Label(item.Key);
+                    GUILayout.Label(item.Value.ToString(), GUILayout.Width(50));
+                    GUILayout.EndHorizontal();
+                }
+            }
+            GUILayout.EndVertical();
+
+            #endregion
+
             serializedObject.ApplyModifiedProperties();
             //Unity面板重绘
             Repaint();
@@ -92,9 +132,10 @@ namespace YouYou
 
         private void OnEnable() {
             //建立属性关系
-            mClearInterval = serializedObject.FindProperty("ClearInterval");
-            mGameObjectPoolEntityGroup = serializedObject.FindProperty("mGameObjectPoolEntityGroup");
+            mReleaseClassObjectInterval = serializedObject.FindProperty("ReleaseClassObjectInterval");
+            mGameObjectPoolEntityGroup = serializedObject.FindProperty("m_GameObjectPoolEntityGroup");
 
+            mReleaseResourceInterval = serializedObject.FindProperty("ReleaseResourceInterval");
             //应用 属性信息的修改
             serializedObject.ApplyModifiedProperties();
         }

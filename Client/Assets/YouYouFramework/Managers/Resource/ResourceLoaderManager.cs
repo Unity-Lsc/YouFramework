@@ -113,6 +113,18 @@ namespace YouYou
         /// <param name="onUpdate">加载中回调(进度)</param>
         /// <param name="onComplete">加载完毕回调</param>
         public void LoadAssetBundle(string abPath, Action<float> onUpdate = null, Action<AssetBundle> onComplete = null) {
+
+            //1.先判断资源包是否存在于AssetBundlePool
+            ResourceEntity resourceEntity = GameEntry.Pool.PoolManager.AssetBundlePool.Spawn(abPath);
+            if(resourceEntity != null) {
+                //说名资源在资源包的池子中存在
+                var assetBundle = resourceEntity.Target as AssetBundle;
+                GameEntry.Log("所加载的AB包,存在于资源包的对象池中,直接从池子里获取", LogCategory.Resource);
+                onComplete?.Invoke(assetBundle);
+                return;
+            }
+
+            //2.池中没有才会进入下面的
             var routine = GameEntry.Pool.DequeueClassObject<AssetBundleLoaderRoutine>();
             if(routine == null) {
                 routine = new AssetBundleLoaderRoutine();
@@ -126,8 +138,17 @@ namespace YouYou
                 onUpdate?.Invoke(progress);
             };
             routine.OnLoadAssetBundleComplete = (AssetBundle assetBundle) => {
-                onComplete?.Invoke(assetBundle);
 
+                //把资源包注册到资源池里
+                resourceEntity = GameEntry.Pool.DequeueClassObject<ResourceEntity>();
+                resourceEntity.ResourceName = abPath;
+                resourceEntity.IsAssetBundle = true;
+                resourceEntity.Target = assetBundle;
+                GameEntry.Pool.PoolManager.AssetBundlePool.Register(resourceEntity);
+
+                GameEntry.Log("把加载出来的资源包注册到资源池中", LogCategory.Resource);
+
+                onComplete?.Invoke(assetBundle);
                 //结束循环 回池
                 m_AssetBundleLoaderList.Remove(routine);
                 GameEntry.Pool.EnqueueClassObject(routine);

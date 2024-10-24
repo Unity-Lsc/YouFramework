@@ -18,7 +18,7 @@ namespace YouYou
 
             PoolManager = new PoolManager();
 
-            mNextRunTime = Time.time;
+            m_ReleaseClassObjectNextRunTime = Time.time;
             
             InitGameObjectPool();
             
@@ -68,24 +68,42 @@ namespace YouYou
 
         #endregion
 
-        #region 类对象池编辑器面板相关
+        #region 对象池编辑器面板相关
 
         /// <summary>
         /// 释放的时间间隔
         /// </summary>
-        public int ClearInterval = 0;
+        public int ReleaseClassObjectInterval = 0;
 
         /// <summary>
         /// 下次运行时间
         /// </summary>
-        private float mNextRunTime = 0f;
+        private float m_ReleaseClassObjectNextRunTime = 0f;
+
+        /// <summary>
+        /// 释放资源包对象池间隔
+        /// </summary>
+        public int ReleaseResourceInterval = 60;
+
+        /// <summary>
+        /// 下次释放资源包对象池运行时间
+        /// </summary>
+        private float m_ReleaseResourceNextRunTime = 0;
 
         public void OnUpdate() {
-            if(Time.time > mNextRunTime + ClearInterval) {
+            if(Time.time > m_ReleaseClassObjectNextRunTime + ReleaseClassObjectInterval) {
                 //该释放了
-                mNextRunTime = Time.time;
+                m_ReleaseClassObjectNextRunTime = Time.time;
                 PoolManager.ReleaseClassObjectPool();
+                GameEntry.Log("释放类对象池");
             }
+
+            if(Time.time > m_ReleaseResourceNextRunTime + ReleaseResourceInterval) {
+                m_ReleaseResourceNextRunTime = Time.time;
+                PoolManager.ReleaseAssetBundlePool();
+                GameEntry.Log("释放资源包对象池");
+            }
+
         }
 
         #endregion
@@ -150,13 +168,13 @@ namespace YouYou
         /// 游戏物体对象池分组
         /// </summary>
         [SerializeField]
-        private GameObjectPoolEntity[] mGameObjectPoolEntityGroup;
+        private GameObjectPoolEntity[] m_GameObjectPoolEntityGroup;
 
         /// <summary>
         /// 初始化游戏物体对象池
         /// </summary>
         public void InitGameObjectPool() {
-            StartCoroutine(PoolManager.GameObjectPool.Init(mGameObjectPoolEntityGroup, transform));
+            StartCoroutine(PoolManager.GameObjectPool.Init(m_GameObjectPoolEntityGroup, transform));
         }
 
         /// <summary>

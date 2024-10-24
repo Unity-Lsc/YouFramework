@@ -99,7 +99,7 @@ namespace YouYou
         /// <summary>
         /// 释放类对象池
         /// </summary>
-        public void ReleaseClassObjectPool() {
+        public void Release() {
             lock(mClassObjectPoolDict) {
                 int queueCount = 0;//队列的数量
                 //定义迭代器

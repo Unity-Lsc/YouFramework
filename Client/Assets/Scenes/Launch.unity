@@ -212,7 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ClearInterval: 10
-  mGameObjectPoolEntityGroup:
+  m_GameObjectPoolEntityGroup:
   - PoolID: 1
     PoolName: Role
     IsCullDespawned: 1
